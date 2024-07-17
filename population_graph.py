@@ -18,3 +18,5 @@ pademelon_population = population_values[:, 0]
 thylacine_population = population_values[:, 1]
 
 draw(pademelon_population, thylacine_population, t)
+
+draw_relative(calc_relative(pademelon_population, thylacine_population), t)

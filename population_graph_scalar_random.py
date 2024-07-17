@@ -39,3 +39,5 @@ while iterations > 0:
 t = np.linspace(0, 100, 1000)
 
 draw(pademelon_list, thylacine_list, t, "Population Change Over Time (0.10 Randomness)")
+
+# draw_relative(calc_relative(pademelon_list, thylacine_list), t, "Relative Population Change Over Time (0.10 Randomness)")
