@@ -15,6 +15,15 @@ def model(p, t):
     dydt = - lam * y + omeg * x * y
     return [dxdt, dydt]
 
+def check_boundaries(population):
+    if population > 1000:
+        return 1000
+    if population < 0:
+        return 0
+    else:
+        return population
+
+
 x0 = 180
 y0 = 30
 
@@ -33,15 +42,17 @@ while iterations > 0:
 
     pademelon_list_temp = list(pademelon_population)
     for x in pademelon_list_temp:
-        pademelon_list.append(x)
+        integer = check_boundaries(x)
+        pademelon_list.append(integer)
     pademelon_list.pop()
-    x0 = pademelon_list_temp[10] * (1 - random_max + random.randint(0, 100) / 50 * random_max)
+    x0 = check_boundaries(check_boundaries(pademelon_list_temp[10]) * (1 - random_max + random.randint(0, 100) / 50 * random_max))
 
     thylacine_list_temp = list(thylacine_population)
     for y in thylacine_list_temp:
+        integer = check_boundaries(y)
         thylacine_list.append(y)
     thylacine_list.pop()
-    y0 = thylacine_list_temp[10] * (1 - random_max + random.randint(0, 100) / 50 * random_max)
+    y0 = check_boundaries(check_boundaries(thylacine_list_temp[10]) * (1 - random_max + random.randint(0, 100) / 50 * random_max))
 
     iterations-=1
 
