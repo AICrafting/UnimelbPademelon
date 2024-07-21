@@ -1,3 +1,5 @@
+# Smooth curve - use rounded for lifelike results (no fractional animals)
+
 import numpy as np
 from scipy.integrate import odeint
 from population_graph_functions import *

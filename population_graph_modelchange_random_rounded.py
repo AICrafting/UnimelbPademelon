@@ -1,3 +1,8 @@
+# Model is redefined every unit of time - smoother transition
+# Parameters are multiplied by random scalars - symbolises internal randomness
+# such as from diseases or excess fertility in the populations that would impact their
+# intrinsic growth rate and natural death rate
+
 import numpy as np
 from scipy.integrate import odeint
 from population_graph_functions import *

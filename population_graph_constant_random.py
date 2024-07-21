@@ -4,20 +4,20 @@ import numpy as np
 from scipy.integrate import odeint
 from population_graph_functions import *
 
-random_max = 0.1
-
-random_dict["scalar"] = True
+random_dict["constant"] = True
 
 
 def model(p, t, pademelon_extinct, thylacine_extinct):
-    x,y = p
+    x, y = p
     if not pademelon_extinct:
         dxdt = alph * x - bet * x * y
     else:
+        #Ensure that pademelon population remains 0 after species is driven to extinction
         dxdt = 0
     if not thylacine_extinct:
         dydt = - lam * y + omeg * x * y
     else:
+        # Ensure that thylacine population remains 0 after species is driven to extinction
         dydt = 0
     return [dxdt, dydt]
 
@@ -35,13 +35,11 @@ while iterations > 0:
     pademelon_population = population_values[:, 0]
     thylacine_population = population_values[:, 1]
 
-    x0 = format_list(pademelon_population, pademelon_list, random_max, "pademelon")
-    y0 = format_list(thylacine_population, thylacine_list, random_max, "thylacine")
+    x0 = format_list(pademelon_population, pademelon_list, 0, "pademelon")
+    y0 = format_list(thylacine_population, thylacine_list, 0, "thylacine")
 
-    iterations-=1
+    iterations -= 1
 
 t = np.linspace(0, 100, 1000)
 
-draw(pademelon_list, thylacine_list, t, "Population Change Over Time (0.10 Randomness)")
-
-# draw_relative(calc_relative(pademelon_list, thylacine_list), t, "Relative Population Change Over Time (0.10 Randomness)")
+draw(pademelon_list, thylacine_list, t, "Population Change Over Time (Random Constant)")

@@ -15,6 +15,9 @@ thylacine_extinct = False
 species_dict = {"pademelon": pademelon_extinct,
                 "thylacine": thylacine_extinct}
 
+random_dict = {"constant": False,
+               "scalar": False}
+
 
 def check_boundaries(population):
     if population > 1000:
@@ -44,6 +47,10 @@ def rand_scalar(random_max):
     return 1 - random_max + random.randint(0, 100) / 50 * random_max
 
 
+def rand_const():
+    return random.randint(0, 10) - 5
+
+
 def format_list(population, real_list, random_max, species):
     extinct = species_dict[species]
     population_list_temp = list(population)
@@ -56,7 +63,14 @@ def format_list(population, real_list, random_max, species):
         else:
             real_list.append(0)
     real_list.pop()
-    return check_boundaries(check_boundaries(population_list_temp[10]) * rand_scalar(random_max))
+    if random_dict.get("scalar") & random_dict.get("constant"):
+        return check_boundaries(check_boundaries(population_list_temp[10] + rand_const()) * rand_scalar(random_max))
+    elif random_dict.get("scalar"):
+        return check_boundaries(check_boundaries(population_list_temp[10]) * rand_scalar(random_max))
+    elif random_dict.get("constant"):
+        return check_boundaries(population_list_temp[10] + rand_const())
+    else:
+        return check_boundaries(population_list_temp[10])
 
 
 def draw(pademelon_population, thylacine_population, t, title="Population Change Over Time"):
