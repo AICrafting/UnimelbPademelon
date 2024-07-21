@@ -138,7 +138,10 @@ def calc_relative(pademelon_population, thylacine_population):
     pademelon_list = list(pademelon_population)
     thylacine_list = list(thylacine_population)
     for x in pademelon_list:
-        result.append((x/thylacine_list[pademelon_list.index(x)]))
+        if thylacine_list[pademelon_list.index(x)] != 0:
+            result.append((x/thylacine_list[pademelon_list.index(x)]))
+        else:
+            result.append(0)
     return result
 
 def draw_relative(relative_list, title="Relative Population Over Time"):

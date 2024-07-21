@@ -2,9 +2,9 @@
 
 from population_graph_functions import *
 
-random_max = 0.1
+random_model_max = 0.1
 
-result = framework(initialise_scalar=True, rand_model_scalar=random_max, rounded=False)
+result = framework(initialise_scalar=True, rand_model_scalar=random_model_max, rounded=False)
 
 draw(result[0], result[1], "Population Change Over Time (0.10 Randomness Smooth)")
 
