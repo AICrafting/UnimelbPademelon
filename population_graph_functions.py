@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import random
+from scipy.integrate import odeint
+import numpy as np
 
 alph = 0.15
 bet = 0.003
@@ -9,14 +11,30 @@ omeg = 0.0016
 x0 = 180
 y0 = 30
 
+iterations = 100
+iterations_const = iterations
+
 pademelon_extinct = False
 thylacine_extinct = False
 
 species_dict = {"pademelon": pademelon_extinct,
                 "thylacine": thylacine_extinct}
 
-random_dict = {"constant": False,
-               "scalar": False}
+# random_dict = {"constant": False,
+#                "scalar": False}
+
+
+def model(p, t, pademelon_extinct, thylacine_extinct, scalarx1, scalarx2, scalary1, scalary2):
+    x,y = p
+    if not pademelon_extinct:
+        dxdt = (alph * scalarx1) * x - (bet * scalarx2) * x * y
+    else:
+        dxdt = 0
+    if not thylacine_extinct:
+        dydt = - (lam * scalary1) * y + (omeg * scalary2) * x * y
+    else:
+        dydt = 0
+    return [dxdt, dydt]
 
 
 def check_boundaries(population):
@@ -47,11 +65,11 @@ def rand_scalar(random_max):
     return 1 - random_max + random.randint(0, 100) / 50 * random_max
 
 
-def rand_const():
-    return random.randint(0, 10) - 5
+def rand_const(rand_constant):
+    return random.randint(0, 2 * rand_constant) - rand_constant
 
 
-def format_list(population, real_list, random_max, species):
+def format_list(population, real_list, random_max, rand_constant, species):
     extinct = species_dict[species]
     population_list_temp = list(population)
     for x in population_list_temp:
@@ -63,17 +81,47 @@ def format_list(population, real_list, random_max, species):
         else:
             real_list.append(0)
     real_list.pop()
-    if random_dict.get("scalar") & random_dict.get("constant"):
-        return check_boundaries(check_boundaries(population_list_temp[10] + rand_const()) * rand_scalar(random_max))
-    elif random_dict.get("scalar"):
-        return check_boundaries(check_boundaries(population_list_temp[10]) * rand_scalar(random_max))
-    elif random_dict.get("constant"):
-        return check_boundaries(population_list_temp[10] + rand_const())
-    else:
-        return check_boundaries(population_list_temp[10])
+    if extinct:
+        return 0
+    return check_boundaries(check_boundaries(population_list_temp[10] + rand_const(rand_constant)) * rand_scalar(random_max))
 
 
-def draw(pademelon_population, thylacine_population, t, title="Population Change Over Time"):
+def framework(initialise_scalar=False, rand_model_scalar=0, rand_max=0, rand_const_max=0, rounded=False, x0_local=x0, y0_local=y0,
+              iterations_local=iterations, pademelon_extinct_local=pademelon_extinct, thylacine_extinct_local=thylacine_extinct):
+
+    pademelon_list = []
+    thylacine_list = []
+
+    while iterations_local > 0:
+        t = np.linspace(iterations_const - iterations_local, iterations_const + 1 - iterations_local, 11)
+        if initialise_scalar:
+            scalarx1 = rand_scalar(rand_model_scalar)
+            scalarx2 = rand_scalar(rand_model_scalar)
+            scalary1 = rand_scalar(rand_model_scalar)
+            scalary2 = rand_scalar(rand_model_scalar)
+        else:
+            scalarx1, scalarx2, scalary1, scalary2 = 1
+
+        population_values = odeint(model, [x0_local, y0_local], t, (pademelon_extinct_local, thylacine_extinct_local,
+                                                                    scalarx1, scalarx2, scalary1, scalary2))
+
+        pademelon_population = population_values[:, 0]
+        thylacine_population = population_values[:, 1]
+
+        if rounded:
+            x0_local = format_list(round_element(pademelon_population), pademelon_list, rand_max, rand_const_max, "pademelon")
+            y0_local = format_list(round_element(thylacine_population), thylacine_list, rand_max, rand_const_max, "thylacine")
+        else:
+            x0_local = format_list(pademelon_population, pademelon_list, rand_max, rand_const_max, "pademelon")
+            y0_local = format_list(thylacine_population, thylacine_list, rand_max, rand_const_max, "thylacine")
+
+        iterations_local -= 1
+
+    return [pademelon_list, thylacine_list]
+
+
+def draw(pademelon_population, thylacine_population, title="Population Change Over Time"):
+    t = np.linspace(0, iterations_const, 10 * iterations_const)
     plt.figure(figsize=(10, 6))
     plt.plot(t, pademelon_population, label="Pademelon Population")
     plt.plot(t, thylacine_population, label="Thylacine Population")
@@ -93,7 +141,8 @@ def calc_relative(pademelon_population, thylacine_population):
         result.append((x/thylacine_list[pademelon_list.index(x)]))
     return result
 
-def draw_relative(relative_list, t, title="Relative Population Over Time"):
+def draw_relative(relative_list, title="Relative Population Over Time"):
+    t = np.linspace(0, iterations_const, 10 * iterations_const)
     plt.figure(figsize=(10, 6))
     plt.plot(t, relative_list, label="Pademelon to Thylacine Ratio")
     plt.xlabel("Time")
