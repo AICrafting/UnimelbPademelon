@@ -153,37 +153,26 @@ def draw_relative(relative_list, title="Relative Population Over Time"):
     plt.show()
 
 
-# def calc_slopes(pademelon_list, thylacine_list):
-#     dxdt = []
-#     dydt = []
-#     for x in pademelon_list:
-#         if pademelon_list.index(x) % 10 == 0:
-#             y = thylacine_list[pademelon_list.index(x)]
-#             dxdt.append(alph * x - bet * x * y)
-#             dydt.append(- lam * y + omeg * x * y)
-#     return [dxdt, dydt]
-#
-#
-#
-# def draw_slope_field():
-#     fig = plt.figure(1, figsize=(10, 6))
-#     ax = fig.add_subplot(111)
-#
-#     T, X, Y = np.meshgrid(np.linspace(0, 20, 21), np.linspace(0, 20, 21), np.linspace(0, 20, 21))
-#
-#     U = 1
-#     V = alph * X - bet * X * Y
-#
-#     N = np.sqrt(U ** 2 + V ** 2)
-#     U2, V2 = U / N, V / N
-#     ax.quiver(X, T, U2, V2)
-#
-#     plt.xlim([0, 20])
-#     plt.ylim([0, 20])
-#     plt.hlines(0, 0, 20)
-#     plt.vlines(0, 0, 20)
-#     plt.xlabel("x")
-#     plt.ylabel("dy/dx")
-#     plt.grid()
-#     plt.title("Direction field plot for the system")
-#     plt.show()
+def draw_slope_field():
+    fig = plt.figure(1, figsize=(10, 6))
+    ax = fig.add_subplot(111)
+
+    X, Y = np.meshgrid(np.linspace(20, 980, 20), np.linspace(20, 980, 20))
+
+    U = alph * X - bet * X * Y
+    V = - lam * Y + omeg * X * Y
+
+    N = np.sqrt(U ** 2 + V ** 2)
+    U2, V2 = U / N * 50, V / N * 50
+    ax.quiver(X, Y, U2, V2)
+
+    plt.xlim([0, 1000])
+    plt.ylim([0, 1000])
+    plt.hlines(0, 0, 1000)
+    plt.vlines(0, 0, 1000)
+    plt.xlabel("Pademelon Population")
+    plt.ylabel("Thylacine Population")
+    plt.grid()
+    plt.title("Pademelon to Thylacine Slope Field")
+    plt.show()
+
