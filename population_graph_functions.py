@@ -95,12 +95,9 @@ def framework(initialise_scalar=False, rand_model_scalar=0, rand_max=0, rand_con
     while iterations_local > 0:
         t = np.linspace(iterations_const - iterations_local, iterations_const + 1 - iterations_local, 11)
         if initialise_scalar:
-            scalarx1 = rand_scalar(rand_model_scalar)
-            scalarx2 = rand_scalar(rand_model_scalar)
-            scalary1 = rand_scalar(rand_model_scalar)
-            scalary2 = rand_scalar(rand_model_scalar)
+            scalarx1, scalarx2, scalary1, scalary2 = rand_scalar(rand_model_scalar), rand_scalar(rand_model_scalar), rand_scalar(rand_model_scalar), rand_scalar(rand_model_scalar)
         else:
-            scalarx1, scalarx2, scalary1, scalary2 = 1
+            scalarx1, scalarx2, scalary1, scalary2 = 1, 1, 1, 1
 
         population_values = odeint(model, [x0_local, y0_local], t, (pademelon_extinct_local, thylacine_extinct_local,
                                                                     scalarx1, scalarx2, scalary1, scalary2))
@@ -154,3 +151,39 @@ def draw_relative(relative_list, title="Relative Population Over Time"):
     plt.legend()
     plt.grid("True")
     plt.show()
+
+
+# def calc_slopes(pademelon_list, thylacine_list):
+#     dxdt = []
+#     dydt = []
+#     for x in pademelon_list:
+#         if pademelon_list.index(x) % 10 == 0:
+#             y = thylacine_list[pademelon_list.index(x)]
+#             dxdt.append(alph * x - bet * x * y)
+#             dydt.append(- lam * y + omeg * x * y)
+#     return [dxdt, dydt]
+#
+#
+#
+# def draw_slope_field():
+#     fig = plt.figure(1, figsize=(10, 6))
+#     ax = fig.add_subplot(111)
+#
+#     T, X, Y = np.meshgrid(np.linspace(0, 20, 21), np.linspace(0, 20, 21), np.linspace(0, 20, 21))
+#
+#     U = 1
+#     V = alph * X - bet * X * Y
+#
+#     N = np.sqrt(U ** 2 + V ** 2)
+#     U2, V2 = U / N, V / N
+#     ax.quiver(X, T, U2, V2)
+#
+#     plt.xlim([0, 20])
+#     plt.ylim([0, 20])
+#     plt.hlines(0, 0, 20)
+#     plt.vlines(0, 0, 20)
+#     plt.xlabel("x")
+#     plt.ylabel("dy/dx")
+#     plt.grid()
+#     plt.title("Direction field plot for the system")
+#     plt.show()
