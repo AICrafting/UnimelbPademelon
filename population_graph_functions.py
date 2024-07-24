@@ -20,8 +20,10 @@ thylacine_extinct = False
 species_dict = {"pademelon": pademelon_extinct,
                 "thylacine": thylacine_extinct}
 
-# random_dict = {"constant": False,
-#                "scalar": False}
+survival_dict = {"survive": 0,
+                 "p_extinct": 0,
+                 "t_extinct": 0,
+                 "all_extinct": 0}
 
 
 def model(p, t, pademelon_extinct, thylacine_extinct, scalarx1, scalarx2, scalary1, scalary2):
@@ -52,6 +54,16 @@ def check_for_extinction(population):
     else:
         return False
 
+
+def calc_survival(p_extinct, t_extinct):
+    if p_extinct & t_extinct:
+        survival_dict["all_extinct"] += 1
+    elif p_extinct:
+        survival_dict["p_extinct"] += 1
+    elif t_extinct:
+        survival_dict["t_extinct"] += 1
+    else:
+        survival_dict["survive"] += 1
 
 def round_element(population):
     population_list = list(population)
@@ -114,6 +126,7 @@ def framework(initialise_scalar=False, rand_model_scalar=0, rand_max=0, rand_con
 
         iterations_local -= 1
 
+    calc_survival(pademelon_extinct_local, thylacine_extinct_local)
     return [pademelon_list, thylacine_list]
 
 
@@ -166,13 +179,34 @@ def draw_slope_field():
     U2, V2 = U / N * 50, V / N * 50
     ax.quiver(X, Y, U2, V2)
 
-    plt.xlim([0, 1000])
-    plt.ylim([0, 1000])
-    plt.hlines(0, 0, 1000)
-    plt.vlines(0, 0, 1000)
     plt.xlabel("Pademelon Population")
     plt.ylabel("Thylacine Population")
     plt.grid()
     plt.title("Pademelon to Thylacine Slope Field")
     plt.show()
 
+
+def draw_vector_field():
+    fig = plt.figure(1, figsize=(10, 6))
+    ax = fig.add_subplot(111)
+
+    X, Y = np.meshgrid(np.linspace(20, 980, 50), np.linspace(20, 980, 50))
+
+    U = alph * X - bet * X * Y
+    V = - lam * Y + omeg * X * Y
+
+    speed = np.sqrt(U ** 2 + V ** 2)
+    ax.streamplot(X, Y, U, V, color=speed)
+
+    plt.xlabel("Pademelon Population")
+    plt.ylabel("Thylacine Population")
+    plt.grid()
+    plt.title("Pademelon to Thylacine Vector Field")
+    plt.show()
+
+
+def print_surv_dict():
+    print(f"All species in system survived: {survival_dict["survive"]}")
+    print(f"Pademelons extinct: {survival_dict["p_extinct"]}")
+    print(f"Thylacines extinct: {survival_dict["t_extinct"]}")
+    print(f"All species in system extinct: {survival_dict["all_extinct"]}")

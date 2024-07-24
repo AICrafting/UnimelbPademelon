@@ -9,3 +9,7 @@ draw(result[0], result[1])
 # draw_relative(calc_relative(result[0], result[1]))
 
 # draw_slope_field()
+
+# draw_vector_field()
+
+# print_surv_dict()
