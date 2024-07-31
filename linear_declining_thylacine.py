@@ -7,7 +7,7 @@ alph = 0.15
 bet = 0.003
 lam = 0.18
 omeg = 0.0016
-pop_decrease = 0.9
+pop_decrease = 0.6
 
 def model(p, t):
     x,y = p
@@ -51,7 +51,7 @@ plt.plot(t, pademelon_list, label="Pademelon Population")
 plt.plot(t, thylacine_list, label="Thylacine Population")
 plt.xlabel("Time")
 plt.ylabel("Population")
-plt.title("Population Change Over Time (10% of Thylacines Hunted every 1 Unit of Time)")
+plt.title("Population Change Over Time (40% of Thylacines Hunted every 1 Unit of Time)")
 plt.legend()
 plt.grid(True)
 plt.show()

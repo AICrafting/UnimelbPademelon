@@ -81,7 +81,20 @@ def rand_const(rand_constant):
     return random.randint(0, 2 * rand_constant) - rand_constant
 
 
-def format_list(population, real_list, random_max, rand_constant, species):
+def rand_bell_scalar(random_max):
+    r = np.random.normal(loc=0, scale=random_max)
+    a = round(r, 3)
+    if abs(a) > random_max:
+        b = round(a % 0.2, 3)
+        if a < 0:
+            b -= random_max
+            b = round(b, 3)
+    else:
+        b = a
+    return 1 - b
+
+
+def format_list(population, real_list, random_max, rand_constant, species, rand_max_bell=False):
     extinct = species_dict[species]
     population_list_temp = list(population)
     for x in population_list_temp:
@@ -95,10 +108,13 @@ def format_list(population, real_list, random_max, rand_constant, species):
     real_list.pop()
     if extinct:
         return 0
-    return check_boundaries(check_boundaries(population_list_temp[10] + rand_const(rand_constant)) * rand_scalar(random_max))
+    if not rand_max_bell:
+        return check_boundaries(check_boundaries(population_list_temp[10] + rand_const(rand_constant)) * rand_scalar(random_max))
+    else:
+        return check_boundaries(check_boundaries(population_list_temp[10] + rand_const(rand_constant)) * rand_bell_scalar(random_max))
 
 
-def framework(initialise_scalar=False, rand_model_scalar=0, rand_max=0, rand_const_max=0, rounded=False, x0_local=x0, y0_local=y0,
+def framework(initialise_scalar=False, rand_model_scalar=0, rand_max=0, rand_max_bell=False, rand_const_max=0, rounded=False, x0_local=x0, y0_local=y0,
               iterations_local=iterations, pademelon_extinct_local=pademelon_extinct, thylacine_extinct_local=thylacine_extinct):
 
     pademelon_list = []
@@ -118,11 +134,11 @@ def framework(initialise_scalar=False, rand_model_scalar=0, rand_max=0, rand_con
         thylacine_population = population_values[:, 1]
 
         if rounded:
-            x0_local = format_list(round_element(pademelon_population), pademelon_list, rand_max, rand_const_max, "pademelon")
-            y0_local = format_list(round_element(thylacine_population), thylacine_list, rand_max, rand_const_max, "thylacine")
+            x0_local = format_list(round_element(pademelon_population), pademelon_list, rand_max, rand_const_max, "pademelon", rand_max_bell=rand_max_bell)
+            y0_local = format_list(round_element(thylacine_population), thylacine_list, rand_max, rand_const_max, "thylacine", rand_max_bell=rand_max_bell)
         else:
-            x0_local = format_list(pademelon_population, pademelon_list, rand_max, rand_const_max, "pademelon")
-            y0_local = format_list(thylacine_population, thylacine_list, rand_max, rand_const_max, "thylacine")
+            x0_local = format_list(pademelon_population, pademelon_list, rand_max, rand_const_max, "pademelon", rand_max_bell=rand_max_bell)
+            y0_local = format_list(thylacine_population, thylacine_list, rand_max, rand_const_max, "thylacine", rand_max_bell=rand_max_bell)
 
         iterations_local -= 1
 
