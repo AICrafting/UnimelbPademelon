@@ -5,12 +5,18 @@
 
 from population_graph_functions import *
 
-random_max = 0.1
-random_model_max = 0.1
-rand_constant = 5
+random_max = 0.2
+random_model_max = 0.2
+rand_constant = 2
 
-result = framework(initialise_scalar=True, rand_model_scalar=random_model_max, rand_const_max=rand_constant, rand_max=random_max, rounded=True)
 
-draw(result[0], result[1], "Population Change Over Time (3 Types Of Randomness)")
+for i in range(0,100000):
+    result = framework(initialise_scalar=True, rand_model_scalar=random_model_max, rand_const_max=rand_constant, rand_max=random_max, rounded=True)
+    print(f"{i+1}/100000")
+
+print_surv_dict()
+
+
+# draw(result[0], result[1], "Population Change Over Time (3 Types Of Randomness)")
 
 # draw_relative(calc_relative(result[0], result[1]), "Relative Population Over Time (3 Types Of Randomness)")

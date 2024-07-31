@@ -4,10 +4,14 @@
 
 from population_graph_functions import *
 
-random_max = 0.1
+random_max = 0.5
 
-result = framework(rand_max=random_max, rounded=True)
+for i in range(0,100000):
+    result = framework(rand_max=random_max, rounded=True)
+    print(f"{i + 1}/100000")
 
-draw(result[0], result[1],  "Population Change Over Time (0.10 Randomness)")
+# draw(result[0], result[1],  "Population Change Over Time (0.10 Randomness)")
 
 # draw_relative(calc_relative(result[0], result[1]), "Relative Population Change Over Time (0.10 Randomness)")
+
+print_surv_dict()

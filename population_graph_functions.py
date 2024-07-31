@@ -55,12 +55,12 @@ def check_for_extinction(population):
         return False
 
 
-def calc_survival(p_extinct, t_extinct):
-    if p_extinct & t_extinct:
+def calc_survival(pademelon, thylacine):
+    if (pademelon == 0) & (thylacine == 0):
         survival_dict["all_extinct"] += 1
-    elif p_extinct:
+    elif pademelon == 0:
         survival_dict["p_extinct"] += 1
-    elif t_extinct:
+    elif thylacine == 0:
         survival_dict["t_extinct"] += 1
     else:
         survival_dict["survive"] += 1
@@ -126,7 +126,9 @@ def framework(initialise_scalar=False, rand_model_scalar=0, rand_max=0, rand_con
 
         iterations_local -= 1
 
-    calc_survival(pademelon_extinct_local, thylacine_extinct_local)
+    calc_survival(pademelon_list[-1], thylacine_list[-1])
+    species_dict["pademelon"] = False
+    species_dict["thylacine"] = False
     return [pademelon_list, thylacine_list]
 
 
