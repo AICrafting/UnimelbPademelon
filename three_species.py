@@ -15,7 +15,7 @@ beta2 = 0.002  # Predation rate of red foxes on pademelons
 lambda1 = 0.18
 omega1 = 0.0016
 lambda2 = 0.2  # Natural death rate of red foxes
-omega2 = 0.001786  # Growth rate of red foxes due to predation on pademelons
+omega2 = 0.001781  # Growth rate of red foxes due to predation on pademelons
 
 x0 = 180
 y0 = 30
